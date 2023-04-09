@@ -1,26 +1,84 @@
 from rest_framework import serializers
+from authentication.models import User
+from authentication.serializer import UserSerializer
 from .models import *
 
+
 class ProjectSerializer(serializers.ModelSerializer):
-    class Meta :
+    created_by = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    architect = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    foreman = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    supervisor = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    # architect = UserSerializer()
+    # foreman = UserSerializer()
+
+    class Meta:
         model = Project
         fields = '__all__'
         depth = 1
 
-class TaskSerializer(serializers.ModelSerializer):
-    class Meta :
-        model = Task
+
+
+class MaterialSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Material
+        fields = ('id', 'name', 'description', 'unit_cost')
+        depth = 1
+
+
+class MaterialUsageSerializer(serializers.ModelSerializer):
+    material= serializers.PrimaryKeyRelatedField(queryset=Material.objects.all())
+    daily_record =serializers.PrimaryKeyRelatedField(queryset=DailyRecord.objects.all())
+
+    class Meta:
+        model = MaterialUsage
+        fields = ('id', 'material', 'daily_record', 'quantity_used')
+        depth = 1
+
+
+class DailyRecordSerializer(serializers.ModelSerializer):
+    # add materials serializer
+    # materials = MaterialUsageSerializer(many=True)
+    project= serializers.PrimaryKeyRelatedField(queryset=Project.objects.all())
+   
+
+    class Meta:
+        model = DailyRecord
         fields = '__all__'
         depth = 1
 
-class TeamSerializer(serializers.ModelSerializer):
-    class Meta :
-        model = Team
-        fields = '__all__'
-        depth = 1
+
+
 
 class CommentSerializer(serializers.ModelSerializer):
-    class Meta :
+    user = serializers.PrimaryKeyRelatedField(read_only=True)
+
+    class Meta:
         model = Comment
         fields = '__all__'
         depth = 1
+
+class InvoiceSerializer(serializers.ModelSerializer):
+    created_by = UserSerializer()
+    project = ProjectSerializer()
+
+    class Meta:
+        model = Invoice
+        fields = '__all__'
+        depth = 1
+
+    
+class BlueprintSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Blueprint
+        fields = '__all__'
+
+class RecordPicsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RecordPics
+        fields = '__all__'
+
+class BuildingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Building
+        fields = '__all__'

@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 import django_heroku
 import dj_database_url
 import os
@@ -50,7 +53,8 @@ INSTALLED_APPS = [
     "corsheaders",
     'rest_framework',
     'authentication',
-    'projectmgt'
+    'projectmgt',
+    'cloudinary'
 ]
 
 MIDDLEWARE = [
@@ -145,6 +149,8 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 # Enable WhiteNoise's GZip compression of static assets.
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
@@ -172,6 +178,14 @@ SIMPLE_JWT ={
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_WHITELIST = (
+  'http://localhost:3000',
+)
+cloudinary.config(
+  cloud_name = "dj9cp8xcv",
+  api_key = "317344648845814",
+  api_secret = "4kwI_oxmEGzk8jSRRNIqZzsNxNo",
+  secure = True
+)
 
 
-django_heroku.settings(locals())
