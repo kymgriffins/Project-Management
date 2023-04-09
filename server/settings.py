@@ -33,11 +33,7 @@ IS_HEROKU = "DYNO" in os.environ
 if not IS_HEROKU:
     DEBUG = True
 
-
-if IS_HEROKU:
-    ALLOWED_HOSTS = ["*"]
-else:
-    ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
