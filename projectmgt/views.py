@@ -287,14 +287,25 @@ def invoice_list(request):
         if serializer.is_valid():
             invoice = serializer.save()
             
-            # Bulk create InvoiceItem objects
-            invoice_items_data = request.data.pop('invoice_items', [])
-            invoice_items = [InvoiceItem(invoice=invoice, **item_data) for item_data in invoice_items_data]
-            InvoiceItem.objects.bulk_create(invoice_items)
             
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@api_view(['GET', 'POST'])
+def invoice_items(request):
+    """
+    API endpoint to list and create invoice items.
+    """
+    if request.method == "GET":
+        invoice_items = InvoiceItem.objects.all()
+        serializer = InvoiceItemSerializer(invoice_items, many=True)
+        return Response(serializer.data)
+    elif request.method == "POST":
+        serializer = InvoiceItemSerializer(data=request.data)
+        if serializer.is_valid():
+            invoice_item = serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
 def invoice_details(request, pk):

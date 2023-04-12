@@ -19,5 +19,6 @@ urlpatterns = [
     path('record_pic/', views.create_record_pic, name='create_record_pic'),
     path('building/', views.create_building, name='create_building'),
     path('projectsrecords/<int:pk>/', views.project_daily_records, name='project_daily_records'),
+    path('invoice-items/', views.invoice_items),
 ]
 

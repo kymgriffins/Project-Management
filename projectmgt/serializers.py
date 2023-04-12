@@ -32,7 +32,7 @@ class MaterialUsageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MaterialUsage
-        fields = ('id', 'material', 'daily_record', 'quantity_used')
+        fields = '__all__'
         depth = 1
 
 
@@ -59,13 +59,19 @@ class CommentSerializer(serializers.ModelSerializer):
         depth = 1
 
 class InvoiceSerializer(serializers.ModelSerializer):
-    created_by = UserSerializer()
-    project = ProjectSerializer()
+    project= serializers.PrimaryKeyRelatedField(queryset=Project.objects.all())
+    created_by= serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
 
     class Meta:
         model = Invoice
         fields = '__all__'
         depth = 1
+class InvoiceItemSerializer(serializers.ModelSerializer):
+    materials= serializers.PrimaryKeyRelatedField(queryset=Material.objects.all())
+    invoice= serializers.PrimaryKeyRelatedField(queryset=Invoice.objects.all())
+    class Meta:
+        model = InvoiceItem
+        fields = '__all__'
 
     
 class BlueprintSerializer(serializers.ModelSerializer):
