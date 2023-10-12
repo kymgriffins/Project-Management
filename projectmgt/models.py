@@ -3,26 +3,26 @@ from authentication.models import User
 from cloudinary.models import CloudinaryField
 
 from django.utils import timezone
-# Create your models here.
+
 
 class Project(models.Model):
-    STATUS_CHOICES = (
-        ('planning', 'Planning'),
-        ('foundation', 'Foundation'),
-        ('framing', 'Framing'),
-        ('rough-in', 'Rough-In'),
-        ('finishing', 'Finishing'),
-        ('completed', 'Completed'),
-        ('cancelled', 'Cancelled'),
-        ('on-hold','On Hold')
-    )
+    PHASE_CHOICES = [
+        ('designing', 'Designing'),
+        ('approvals', 'Approvals'),
+        ('ground_breaking', 'Ground Breaking'),
+        ('substructure', 'Substructure'),
+        ('superstructure', 'Superstructure'),
+        ('finishes', 'Finishes'),
+        ('handing_over', 'Handing Over'),
+    ]
+    current_phase = models.CharField(max_length=255, choices=PHASE_CHOICES, default='designing')
     name = models.CharField(max_length=255)
     description = models.TextField()
     location = models.CharField(max_length=255)
     start_date = models.DateField(blank=True, null=True, auto_now_add=True) 
     end_date = models.DateField(blank=True, null=True)
     blueprints = models.ManyToManyField('Blueprint', blank=True, related_name="blueprints")
-    status = models.CharField(max_length=255, choices=STATUS_CHOICES)
+    phases = models.CharField(max_length=255, choices=PHASE_CHOICES)
     current_budget = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True) 
     estimated_budget = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     supervisor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='supervised_projects')
@@ -32,10 +32,44 @@ class Project(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     is_approved = models.BooleanField(default=False)
+    payments = models.ManyToManyField("Payment", blank=True, related_name='project_payments')
     
 
     def __str__(self):
         return self.name
+       
+
+    def get_next_phase(self):
+        # Define a method to get the next phase based on the current phase
+        current_phase_index = [choice[0] for choice in self.PHASE_CHOICES].index(self.current_phase)
+        
+        if current_phase_index < len(self.PHASE_CHOICES) - 1:
+            return self.PHASE_CHOICES[current_phase_index + 1][0]
+        else:
+            return None
+
+    def move_to_next_phase(self):
+        # Define a method to move the project to the next phase
+        next_phase = self.get_next_phase()
+        if next_phase:
+            self.current_phase = next_phase
+            self.save()
+
+    def is_last_phase(self):
+        # Define a method to check if the project is in the last phase
+        return self.current_phase == self.PHASE_CHOICES[-1][0]
+   
+class Payment(models.Model):
+    PAYMENT_STATUS_CHOICES = [
+    ('received', 'Received'),
+    ('pending', 'Pending'),
+    ('overdue', 'Overdue'),]
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    date = models.DateField(auto_now_add=True)
+    due_date = models.DateField()
+    payment_status = models.CharField(max_length=255, choices=PAYMENT_STATUS_CHOICES)
+     
 class Building(models.Model):
     floors = models.IntegerField()
     square_feet = models.DecimalField(max_digits=10, decimal_places=2)
@@ -87,7 +121,7 @@ class DailyRecord(models.Model):
     issues = models.TextField(max_length=500, blank=True)
     workers_pay = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     total_spendings = models.DecimalField(max_digits=10, decimal_places=2)
-    materials = models.ManyToManyField('MaterialUsage',  blank=True, null=True,related_name="materials")
+    materials = models.ManyToManyField('MaterialUsage',  blank=True,related_name="materials")
     documents = models.ManyToManyField('RecordPics', blank=True, related_name="records")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -116,3 +150,5 @@ class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+
+    

@@ -29,12 +29,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-rsa^2##xuiju7qjjvrluesf!f*14y!=i5z7f(^=+7=ls$gnl_4'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-IS_HEROKU = "DYNO" in os.environ
-if not IS_HEROKU:
-    DEBUG = True
+# IS_HEROKU = "DYNO" in os.environ
+# if not IS_HEROKU:
+#     DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
-
+DEBUG = True
 
 # Application definition
 
@@ -99,14 +99,14 @@ DATABASES = {
     }
 }
 
-if "DATABASE_URL" in os.environ:
-    # Configure Django for DATABASE_URL environment variable.
-    DATABASES["default"] = dj_database_url.config(
-        conn_max_age=MAX_CONN_AGE, ssl_require=True)
+# if "DATABASE_URL" in os.environ:
+#     # Configure Django for DATABASE_URL environment variable.
+#     DATABASES["default"] = dj_database_url.config(
+#         conn_max_age=MAX_CONN_AGE, ssl_require=True)
 
-    # Enable test database if found in CI environment.
-    if "CI" in os.environ:
-        DATABASES["default"]["TEST"] = DATABASES["default"]
+#     # Enable test database if found in CI environment.
+#     if "CI" in os.environ:
+#         DATABASES["default"]["TEST"] = DATABASES["default"]
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 
@@ -165,13 +165,11 @@ REST_FRAMEWORK = {
     )
     
 }
-
-SIMPLE_JWT ={
-    'ACCESS_TOKEN_LIFETIME':timedelta(minutes=5),
-    'REFRESH_TOKEN_LIFETIME':timedelta(days=1),
-    'AUTH_HEADER_TYPES':('Bearer')
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "AUTH_HEADER_TYPES": ("Bearer",),
 }
-
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = (
@@ -183,5 +181,4 @@ cloudinary.config(
   api_secret = "4kwI_oxmEGzk8jSRRNIqZzsNxNo",
   secure = True
 )
-
 
