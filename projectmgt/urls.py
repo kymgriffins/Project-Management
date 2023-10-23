@@ -20,5 +20,7 @@ urlpatterns = [
     path('building/', views.create_building, name='create_building'),
     path('projectsrecords/<int:pk>/', views.project_daily_records, name='project_daily_records'),
     path('invoice-items/', views.invoice_items),
+    path('todos/', views.todo_list,  name='todo-list'),
+    path('todos/<int:pk>/', views.todo_detail, name='todo-detail'), 
 ]
 

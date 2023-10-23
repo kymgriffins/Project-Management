@@ -129,19 +129,31 @@ class DailyRecord(models.Model):
 
 class Invoice(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    # remove the amounts here 
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     is_paid = models.BooleanField(default=False)
-    invoices = models.ManyToManyField('InvoiceItem',related_name='invoices')
+    invoices = models.ManyToManyField('InvoiceItem',related_name='invoices', blank=True, null = True)
+    
     date_created = models.DateTimeField(default=timezone.now)
     created_by = models.ForeignKey(User,on_delete=models.CASCADE)
+    name =models.CharField(max_length=50)
+    phone = models.CharField(max_length=50)
+    email = models.CharField(max_length=50, blank=True, null=True)
 class InvoiceItem(models.Model):
-    materials =models.ForeignKey(Material, on_delete=models.CASCADE)
+    TYPE_CHOICES = (
+        ('text', 'Text'),
+        ('material', 'Material'),
+    )
+    item_type = models.CharField(max_length=8, choices=TYPE_CHOICES)
+    content = models.TextField(blank=True)  # For text items
+    materials =models.ForeignKey(Material, on_delete=models.CASCADE, blank=True, null=True)
     quantity = models.PositiveIntegerField()
-    invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE)
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        self.amount = sum(item.materials.unit_cost * item.quantity for item in self.invoices.all())
-        self.save()
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    
+    # def save(self, *args, **kwargs):
+    #     super().save(*args, **kwargs)
+    #     self.amount = sum(item.materials.unit_cost * item.quantity for item in self.invoices.all())
+    #     self.save()
     
 class Comment(models.Model):
     daily_record = models.ForeignKey(DailyRecord, on_delete=models.CASCADE)
@@ -151,4 +163,17 @@ class Comment(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 
-    
+
+class Todo(models.Model):
+    TAG_CHOICES = (
+        ('team', 'Team'),
+        ('low', 'Low'),
+        ('medium', 'Medium'),
+         ('high', 'High'),
+          ('update', 'Update'),
+    )
+    title = models.CharField(max_length=300)
+    assigned_to = models.ManyToManyField(User,blank=True,related_name="assigned")
+    due_date = models.DateTimeField()
+    tags = models.CharField(max_length=15, choices=TAG_CHOICES)
+    description = models.TextField()

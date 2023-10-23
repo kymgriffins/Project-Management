@@ -67,11 +67,12 @@ class InvoiceSerializer(serializers.ModelSerializer):
         fields = '__all__'
         depth = 1
 class InvoiceItemSerializer(serializers.ModelSerializer):
-    materials= serializers.PrimaryKeyRelatedField(queryset=Material.objects.all())
+    # materials= serializers.PrimaryKeyRelatedField(queryset=Material.objects.all())
     invoice= serializers.PrimaryKeyRelatedField(queryset=Invoice.objects.all())
     class Meta:
         model = InvoiceItem
         fields = '__all__'
+        depth = 1
 
     
 class BlueprintSerializer(serializers.ModelSerializer):
@@ -88,3 +89,14 @@ class BuildingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Building
         fields = '__all__'
+        
+
+
+
+class TodoSerializer(serializers.ModelSerializer):
+    # todo = serializers.PrimaryKeyRelatedField(read_only=True)
+
+    class Meta:
+        model = Todo
+        fields = '__all__'
+        depth = 1
