@@ -61,6 +61,7 @@ class CommentSerializer(serializers.ModelSerializer):
 class InvoiceSerializer(serializers.ModelSerializer):
     project= serializers.PrimaryKeyRelatedField(queryset=Project.objects.all())
     created_by= serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    # invoices= serializers.PrimaryKeyRelatedField(queryset=Invoice.objects.all())
 
     class Meta:
         model = Invoice
