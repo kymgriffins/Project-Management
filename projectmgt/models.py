@@ -3,7 +3,7 @@ from authentication.models import User
 from cloudinary.models import CloudinaryField
 
 from django.utils import timezone
-
+from decimal import Decimal
 
 class Project(models.Model):
     PHASE_CHOICES = [
@@ -128,9 +128,9 @@ class DailyRecord(models.Model):
     is_achieved = models.BooleanField(default=False)
 
 class Invoice(models.Model):
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE,blank=True, null = True)
     # remove the amounts here 
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    amount = models.DecimalField(max_digits=10, decimal_places=2,blank=True, null = True,default=0)
     is_paid = models.BooleanField(default=False)
     invoices = models.ManyToManyField('InvoiceItem',related_name='invoices', blank=True, null = True)
     
@@ -139,6 +139,13 @@ class Invoice(models.Model):
     name =models.CharField(max_length=50)
     phone = models.CharField(max_length=50)
     email = models.CharField(max_length=50, blank=True, null=True)
+    def calculate_total_amount(self):
+        total_amount = Decimal(0)
+
+        for invoice_item in self.invoices.all():
+            total_amount += Decimal(invoice_item.quantity) * invoice_item.amount
+
+        return total_amount
 class InvoiceItem(models.Model):
     TYPE_CHOICES = (
         ('text', 'Text'),

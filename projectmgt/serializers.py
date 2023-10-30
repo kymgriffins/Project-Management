@@ -58,22 +58,31 @@ class CommentSerializer(serializers.ModelSerializer):
         fields = '__all__'
         depth = 1
 
-class InvoiceSerializer(serializers.ModelSerializer):
-    project= serializers.PrimaryKeyRelatedField(queryset=Project.objects.all())
-    created_by= serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
-    # invoices= serializers.PrimaryKeyRelatedField(queryset=Invoice.objects.all())
 
-    class Meta:
-        model = Invoice
-        fields = '__all__'
-        depth = 1
 class InvoiceItemSerializer(serializers.ModelSerializer):
     # materials= serializers.PrimaryKeyRelatedField(queryset=Material.objects.all())
-    invoice= serializers.PrimaryKeyRelatedField(queryset=Invoice.objects.all())
+    # invoice= serializers.PrimaryKeyRelatedField(queryset=Invoice.objects.all())
     class Meta:
         model = InvoiceItem
         fields = '__all__'
         depth = 1
+class ReadInvoiceSerializer(serializers.ModelSerializer):
+    project = serializers.PrimaryKeyRelatedField(queryset=Project.objects.all())
+    created_by = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    invoices = InvoiceItemSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Invoice
+        fields = '__all__'
+        depth = 2
+class WriteInvoiceSerializer(serializers.ModelSerializer):
+    project = serializers.PrimaryKeyRelatedField(queryset=Project.objects.all())
+    created_by = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    invoices = serializers.PrimaryKeyRelatedField(many=True, queryset=InvoiceItem.objects.all(), allow_empty=True)
+
+    class Meta:
+        model = Invoice
+        fields = '__all__'
 
     
 class BlueprintSerializer(serializers.ModelSerializer):
