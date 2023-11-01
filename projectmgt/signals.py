@@ -5,16 +5,16 @@ from .models import Invoice, InvoiceItem
 import decimal
 
 
-# @receiver(m2m_changed, sender=Invoice.invoices.through)
-# def update_invoice_total_amount(sender, instance,action, **kwargs):
-#     if action == 'post_add':
+@receiver(m2m_changed, sender=Invoice.invoices.through)
+def update_invoice_total_amount(sender, instance,action, **kwargs):
+    if action == 'post_add':
     
-#         amount = decimal.Decimal(0.00)
+        amount = decimal.Decimal(0.00)
 
-#         for item in instance.items.all():
-#             amount += decimal.Decimal(quantity) * decimal.Decimal(invoice_item.amount)
+        for invoice_item in instance.invoices.all():
+            amount += decimal.Decimal(invoice_item.quantity) * decimal.Decimal(invoice_item.amount)
 
-#         instance.amount = amount
-#         instance.save()
-#     # print(f"Signal triggered for Invoice ID: {invoice.id}")
-#     print(f"Total Amount updated to: {amount}")
+        instance.amount = amount
+        instance.save()
+    # print(f"Signal triggered for Invoice ID: {invoice.id}")
+    
