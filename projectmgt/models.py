@@ -178,3 +178,4 @@ class Todo(models.Model):
     due_date = models.DateTimeField()
     tags = models.CharField(max_length=15, choices=TAG_CHOICES)
     description = models.TextField()
+    # project = models.ForeignKey(Project, on_delete=models.CASCADE)
