@@ -132,7 +132,7 @@ class Invoice(models.Model):
     # remove the amounts here 
     amount = models.DecimalField(max_digits=10, decimal_places=2,blank=True, null=True)
     is_paid = models.BooleanField(default=False)
-    invoices = models.ManyToManyField('InvoiceItem',related_name='invoices', blank=True, null=True)
+    invoices = models.ManyToManyField('InvoiceItem',related_name='invoices', blank=True)
     
     date_created = models.DateTimeField(default=timezone.now)
     created_by = models.ForeignKey(User,on_delete=models.CASCADE)
@@ -170,12 +170,13 @@ class Todo(models.Model):
         ('team', 'Team'),
         ('low', 'Low'),
         ('medium', 'Medium'),
-         ('high', 'High'),
-          ('update', 'Update'),
+        ('high', 'High'),
+        ('update', 'Update'),
     )
     title = models.CharField(max_length=300)
     assigned_to = models.ManyToManyField(User,blank=True,related_name="assigned")
     due_date = models.DateTimeField()
     tags = models.CharField(max_length=15, choices=TAG_CHOICES)
     description = models.TextField()
-    # project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='projects_task')
+    created_at = models.DateTimeField(default=timezone.now)

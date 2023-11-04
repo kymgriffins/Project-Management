@@ -105,6 +105,7 @@ class BuildingSerializer(serializers.ModelSerializer):
 
 class TodoSerializer(serializers.ModelSerializer):
     # todo = serializers.PrimaryKeyRelatedField(read_only=True)
+    project = serializers.PrimaryKeyRelatedField(queryset=Project.objects.all())
 
     class Meta:
         model = Todo
