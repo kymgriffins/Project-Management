@@ -180,3 +180,4 @@ class Todo(models.Model):
     description = models.TextField()
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='projects_task')
     created_at = models.DateTimeField(default=timezone.now)
+    isComplete = models.BooleanField(default=False)
