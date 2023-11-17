@@ -430,3 +430,275 @@ def todo_detail(request, pk):
     elif request.method == 'DELETE':
         todo.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+@api_view(['GET', 'POST'])
+def render_list(request):
+    if request.method == 'GET':
+        renders = Renders.objects.all()
+        serializer = RenderSerializer(renders, many=True)
+        return Response(serializer.data)
+    
+    elif request.method == 'POST':
+        serializer = RenderSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
+def render_details(request, pk):
+    try:
+        render = Renders.objects.get(pk=pk)
+    except Renders.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = RenderSerializer(render)
+        return Response(serializer.data)
+
+    elif request.method == 'PUT':
+        serializer = RenderSerializer(render, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'PATCH':
+        serializer = RenderSerializer(render, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
+        render.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['GET', 'POST'])
+def mep_list(request):
+    if request.method == 'GET':
+        mep_items = MEP.objects.all()
+        serializer = MEPSerializer(mep_items, many=True)
+        return Response(serializer.data)
+    
+    elif request.method == 'POST':
+        serializer = MEPSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
+def mep_details(request, pk):
+    try:
+        mep_item = MEP.objects.get(pk=pk)
+    except MEP.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = MEPSerializer(mep_item)
+        return Response(serializer.data)
+
+    elif request.method == 'PUT':
+        serializer = MEPSerializer(mep_item, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'PATCH':
+        serializer = MEPSerializer(mep_item, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
+        mep_item.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['GET', 'POST'])
+def structurals_list(request):
+    if request.method == 'GET':
+        structurals_items = Structurals.objects.all()
+        serializer = StructuralsSerializer(structurals_items, many=True)
+        return Response(serializer.data)
+
+    elif request.method == 'POST':
+        serializer = StructuralsSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
+def structurals_details(request, pk):
+    try:
+        structurals_item = Structurals.objects.get(pk=pk)
+    except Structurals.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = StructuralsSerializer(structurals_item)
+        return Response(serializer.data)
+
+    elif request.method == 'PUT':
+        serializer = StructuralsSerializer(structurals_item, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'PATCH':
+        serializer = StructuralsSerializer(structurals_item, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
+        structurals_item.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+from .models import QS
+from .serializers import QSSerializer
+
+@api_view(['GET', 'POST'])
+def qs_list(request):
+    if request.method == 'GET':
+        qs_items = QS.objects.all()
+        serializer = QSSerializer(qs_items, many=True)
+        return Response(serializer.data)
+
+    elif request.method == 'POST':
+        serializer = QSSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
+def qs_details(request, pk):
+    try:
+        qs_item = QS.objects.get(pk=pk)
+    except QS.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = QSSerializer(qs_item)
+        return Response(serializer.data)
+
+    elif request.method == 'PUT':
+        serializer = QSSerializer(qs_item, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'PATCH':
+        serializer = QSSerializer(qs_item, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
+        qs_item.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+from .models import Architecturals
+from .serializers import ArchitecturalsSerializer
+
+@api_view(['GET', 'POST'])
+def architecturals_list(request):
+    if request.method == 'GET':
+        architecturals_items = Architecturals.objects.all()
+        serializer = ArchitecturalsSerializer(architecturals_items, many=True)
+        return Response(serializer.data)
+
+    elif request.method == 'POST':
+        serializer = ArchitecturalsSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
+def architecturals_details(request, pk):
+    try:
+        architecturals_item = Architecturals.objects.get(pk=pk)
+    except Architecturals.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = ArchitecturalsSerializer(architecturals_item)
+        return Response(serializer.data)
+
+    elif request.method == 'PUT':
+        serializer = ArchitecturalsSerializer(architecturals_item, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'PATCH':
+        serializer = ArchitecturalsSerializer(architecturals_item, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
+        architecturals_item.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+@api_view(['GET', 'POST'])
+def legals_list(request):
+    if request.method == 'GET':
+        legals_items = Legals.objects.all()
+        serializer = LegalsSerializer(legals_items, many=True)
+        return Response(serializer.data)
+
+    elif request.method == 'POST':
+        serializer = LegalsSerializer(data=request.data)
+        if serializer is valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
+def legals_details(request, pk):
+    try:
+        legals_item = Legals.objects.get(pk=pk)
+    except Legals.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = LegalsSerializer(legals_item)
+        return Response(serializer.data)
+
+    elif request.method == 'PUT':
+        serializer = LegalsSerializer(legals_item, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'PATCH':
+        serializer = LegalsSerializer(legals_item, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
+        legals_item.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

@@ -21,7 +21,6 @@ class Project(models.Model):
     location = models.CharField(max_length=255)
     start_date = models.DateField(blank=True, null=True, auto_now_add=True) 
     end_date = models.DateField(blank=True, null=True)
-    blueprints = models.ManyToManyField('Blueprint', blank=True, related_name="blueprints")
     phases = models.CharField(max_length=255, choices=PHASE_CHOICES)
     current_budget = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True) 
     estimated_budget = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
@@ -34,30 +33,20 @@ class Project(models.Model):
     is_approved = models.BooleanField(default=False)
     payments = models.ManyToManyField("Payment", blank=True, related_name='project_payments')
     
+    # Documents section 
+    blueprints = models.ManyToManyField('Blueprint', blank=True, related_name="blueprints")
+    renders = models.ManyToManyField('Renders', blank=True, related_name="renders")
+    mep = models.ManyToManyField('MEP', blank=True, related_name="mep")
+    architecturals = models.ManyToManyField('Architecturals', blank=True, related_name="architecturals")
+    qs = models.ManyToManyField('QS', blank=True, related_name="qs")
+    structurals =models.ManyToManyField('Structurals', blank=True, related_name="structurals")
+    legals = models.ManyToManyField('Legals', blank=True, related_name="legals")
+    
 
     def __str__(self):
         return self.name
        
 
-    def get_next_phase(self):
-        # Define a method to get the next phase based on the current phase
-        current_phase_index = [choice[0] for choice in self.PHASE_CHOICES].index(self.current_phase)
-        
-        if current_phase_index < len(self.PHASE_CHOICES) - 1:
-            return self.PHASE_CHOICES[current_phase_index + 1][0]
-        else:
-            return None
-
-    def move_to_next_phase(self):
-        # Define a method to move the project to the next phase
-        next_phase = self.get_next_phase()
-        if next_phase:
-            self.current_phase = next_phase
-            self.save()
-
-    def is_last_phase(self):
-        # Define a method to check if the project is in the last phase
-        return self.current_phase == self.PHASE_CHOICES[-1][0]
    
 class Payment(models.Model):
     PAYMENT_STATUS_CHOICES = [
@@ -129,11 +118,9 @@ class DailyRecord(models.Model):
 
 class Invoice(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE,blank=True, null=True)
-    # remove the amounts here 
     amount = models.DecimalField(max_digits=10, decimal_places=2,blank=True, null=True)
     is_paid = models.BooleanField(default=False)
-    invoices = models.ManyToManyField('InvoiceItem',related_name='invoices', blank=True)
-    
+    invoices = models.ManyToManyField('InvoiceItem',related_name='invoices', blank=True)    
     date_created = models.DateTimeField(default=timezone.now)
     created_by = models.ForeignKey(User,on_delete=models.CASCADE)
     name =models.CharField(max_length=50)
@@ -151,33 +138,87 @@ class InvoiceItem(models.Model):
     quantity = models.PositiveIntegerField()
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     
-    # def save(self, *args, **kwargs):
-    #     super().save(*args, **kwargs)
-    #     self.amount = sum(item.materials.unit_cost * item.quantity for item in self.invoices.all())
-    #     self.save()
-    
 class Comment(models.Model):
-    daily_record = models.ForeignKey(DailyRecord, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    content = models.TextField()
+    comment = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
-
-
+    
 class Todo(models.Model):
     TAG_CHOICES = (
         ('team', 'Team'),
         ('low', 'Low'),
-        ('medium', 'Medium'),
         ('high', 'High'),
-        ('update', 'Update'),
+        ('site', 'Site'),
     )
     title = models.CharField(max_length=300)
     assigned_to = models.ManyToManyField(User,blank=True,related_name="assigned")
     due_date = models.DateTimeField()
-    tags = models.CharField(max_length=15, choices=TAG_CHOICES)
+    tags = models.CharField(max_length=15)
     description = models.TextField()
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='projects_task')
     created_at = models.DateTimeField(default=timezone.now)
     isComplete = models.BooleanField(default=False)
+    isDeleted = models.BooleanField(default=False)
+    comments = models.ManyToManyField(Comment,blank=True,related_name="comments") 
+    spendings = models.DecimalField(max_digits=10, decimal_places=2,null=True, blank=True)
+    workers_pay = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    notes= models.TextField()
+    # documents = 
+    def __str__(self):
+        return self.title
+    
+
+class Renders(models.Model):
+    images = CloudinaryField("Renders", null=True, blank=True)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="render_images")
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.project:
+            self.project.renders.add(self)
+
+class MEP(models.Model):
+    images = CloudinaryField("MEP", null=True, blank=True)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="mep_images")
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.project:
+            self.project.mep.add(self)
+
+class Structurals(models.Model):
+    images = CloudinaryField("Structurals", null=True, blank=True)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="structural_images")
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.project:
+            self.project.structurals.add(self)
+
+class QS(models.Model):
+    images = CloudinaryField("QS", null=True, blank=True)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="qs_images")
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.project:
+            self.project.qs.add(self)
+
+class Architecturals(models.Model):
+    images = CloudinaryField("Architecturals", null=True, blank=True)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="architectural_images")
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.project:
+            self.project.architecturals.add(self)
+
+class Legals(models.Model):
+    images = CloudinaryField("Legals", null=True, blank=True)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="legal_images")
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.project:
+            self.project.legals.add(self)

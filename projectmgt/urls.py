@@ -22,5 +22,13 @@ urlpatterns = [
     path('invoice-items/', views.invoice_items),
     path('todos/', views.todo_list,  name='todo-list'),
     path('todos/<int:pk>/', views.todo_detail, name='todo-detail'), 
+    path('structurals/', views.structurals_list, name='structurals-list'),
+    path('structurals/<int:pk>/', views.structurals_details, name='structurals-details'),
+    path('qs/', views.qs_list, name='qs-list'),
+    path('qs/<int:pk>/', views.qs_details, name='qs-details'),
+    path('architecturals/', views.architecturals_list, name='architecturals-list'),
+    path('architecturals/<int:pk>/', views.architecturals_details, name='architecturals-details'),
+    path('legals/', views.legals_list, name='legals-list'),
+    path('legals/<int:pk>/', views.legals_details, name='legals-details'),
 ]
 

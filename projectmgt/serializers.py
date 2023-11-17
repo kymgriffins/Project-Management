@@ -9,6 +9,12 @@ class ProjectSerializer(serializers.ModelSerializer):
     architect = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     foreman = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     supervisor = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    # render = RenderSerializer()
+    # mep = MEPSerializer()
+    # structurals = StructuralsSerializer()
+    # qs = QSSerializer()
+    # architecturals = ArchitecturalsSerializer()
+    # legals = LegalsSerializer()
     # architect = UserSerializer()
     # foreman = UserSerializer()
 
@@ -109,5 +115,42 @@ class TodoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Todo
+        fields = '__all__'
+        depth = 1
+        
+
+class RenderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Renders
+        fields = '__all__'
+        depth = 1
+
+class MEPSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MEP
+        fields = '__all__'
+        depth = 1
+
+class StructuralsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Structurals
+        fields = '__all__'
+        depth = 1
+
+class QSSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = QS
+        fields = '__all__'
+        depth = 1
+
+class ArchitecturalsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Architecturals
+        fields = '__all__'
+        depth = 1
+
+class LegalsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Legals
         fields = '__all__'
         depth = 1
