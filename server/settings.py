@@ -33,7 +33,7 @@ SECRET_KEY = 'django-insecure-rsa^2##xuiju7qjjvrluesf!f*14y!=i5z7f(^=+7=ls$gnl_4
 # if not IS_HEROKU:
 #     DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = [".vercel.app"]
 DEBUG = True
 
 # Application definition

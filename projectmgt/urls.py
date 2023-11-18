@@ -30,5 +30,7 @@ urlpatterns = [
     path('architecturals/<int:pk>/', views.architecturals_details, name='architecturals-details'),
     path('legals/', views.legals_list, name='legals-list'),
     path('legals/<int:pk>/', views.legals_details, name='legals-details'),
+    path('renders/', views.render_list, name='renders'),
+    path('renders/<int:pk>/', views.render_details, name='renders-details'),
 ]
 

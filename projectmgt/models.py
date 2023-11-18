@@ -163,7 +163,7 @@ class Todo(models.Model):
     comments = models.ManyToManyField(Comment,blank=True,related_name="comments") 
     spendings = models.DecimalField(max_digits=10, decimal_places=2,null=True, blank=True)
     workers_pay = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    notes= models.TextField()
+    notes= models.TextField(null=True, blank=True)
     # documents = 
     def __str__(self):
         return self.title
