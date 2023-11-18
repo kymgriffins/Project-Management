@@ -33,7 +33,7 @@ SECRET_KEY = 'django-insecure-rsa^2##xuiju7qjjvrluesf!f*14y!=i5z7f(^=+7=ls$gnl_4
 # if not IS_HEROKU:
 #     DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ['.vercel.app']
 DEBUG = True
 
 # Application definition
@@ -144,7 +144,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'expenseswebsite', 'static'),
+    os.path.join(BASE_DIR, 'project', 'static'),
 )
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
