@@ -40,7 +40,7 @@ SECRET_KEY = env('SECRET_KEY')
 # if not IS_HEROKU:
 #     DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 DEBUG = True
 
 # Application definition
