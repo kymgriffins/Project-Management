@@ -109,7 +109,15 @@ MAX_CONN_AGE = 600
 DATABASES = {
     'default': dj_database_url.parse(env('DATABASE_URL'))
 }
+DATABASES = {
+    # read os.environ['DATABASE_URL'] and raises
+    # ImproperlyConfigured exception if not found
+    #
+    # The db() method is an alias for db_url().
+    'default' :dj_database_url.parse(env('DATABASE_URL')),
 
+
+}
 
 AUTH_PASSWORD_VALIDATORS = [
     {
