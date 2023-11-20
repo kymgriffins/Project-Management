@@ -18,6 +18,11 @@ import cloudinary.api
 import django_heroku
 import dj_database_url
 import os
+import environ
+
+# ENVIRONMENT
+env = environ.Env()
+environ.Env.read_env()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -33,7 +38,7 @@ SECRET_KEY = 'django-insecure-rsa^2##xuiju7qjjvrluesf!f*14y!=i5z7f(^=+7=ls$gnl_4
 # if not IS_HEROKU:
 #     DEBUG = True
 
-ALLOWED_HOSTS = ['.vercel.app']
+ALLOWED_HOSTS = []
 DEBUG = True
 
 # Application definition
@@ -99,17 +104,10 @@ MAX_CONN_AGE = 600
 #         "NAME": os.path.join(BASE_DIR, "db.sqlite3")
 #     }
 # }
+DATABASES = {
+    'default': dj_database_url.parse(env('DATABASE_URL'))
+}
 
-# if "DATABASE_URL" in os.environ:
-#     # Configure Django for DATABASE_URL environment variable.
-#     DATABASES["default"] = dj_database_url.config(
-#         conn_max_age=MAX_CONN_AGE, ssl_require=True)
-
-#     # Enable test database if found in CI environment.
-#     if "CI" in os.environ:
-#         DATABASES["default"]["TEST"] = DATABASES["default"]
-# Password validation
-# https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
