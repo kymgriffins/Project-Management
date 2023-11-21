@@ -192,4 +192,3 @@ cloudinary.config(
   api_secret = "4kwI_oxmEGzk8jSRRNIqZzsNxNo",
   secure = True
 )
-
