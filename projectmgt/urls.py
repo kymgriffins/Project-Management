@@ -32,5 +32,7 @@ urlpatterns = [
     path('legals/<int:pk>/', views.legals_details, name='legals-details'),
     path('renders/', views.render_list, name='renders'),
     path('renders/<int:pk>/', views.render_details, name='renders-details'),
+    path('mep/', views.mep_list, name='mep-list'),
+    path('mep/<int:pk>/', views.mep_details, name='mep-details'),
 ]
 

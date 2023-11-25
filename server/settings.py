@@ -34,6 +34,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 
 SECRET_KEY = env('SECRET_KEY')
+print(SECRET_KEY)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # IS_HEROKU = "DYNO" in os.environ
@@ -106,9 +107,9 @@ MAX_CONN_AGE = 600
 #         "NAME": os.path.join(BASE_DIR, "db.sqlite3")
 #     }
 # }
-DATABASES = {
-    'default': dj_database_url.parse(env('DATABASE_URL'))
-}
+# DATABASES = {
+#     'default': dj_database_url.parse(env('DATABASE_URL'))
+# }
 DATABASES = {
     # read os.environ['DATABASE_URL'] and raises
     # ImproperlyConfigured exception if not found
@@ -192,3 +193,11 @@ cloudinary.config(
   api_secret = "4kwI_oxmEGzk8jSRRNIqZzsNxNo",
   secure = True
 )
+# settings.py
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587  # Gmail SMTP port
+EMAIL_USE_TLS = True  # TLS encryption
+EMAIL_HOST_USER = 'kimutaigriffins1960@gmail.com'  # Your Gmail address
+EMAIL_HOST_PASSWORD = 'zxdb iqyh drfi hsyu '  # Your Gmail password or app password

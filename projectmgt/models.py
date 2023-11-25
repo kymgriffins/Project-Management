@@ -6,6 +6,23 @@ from django.utils import timezone
 from decimal import Decimal
 
 class Project(models.Model):
+    # Client Details 
+    client_name = models.CharField(max_length=255)
+    client_email = models.EmailField(max_length=255)
+    # Site Visit of the project
+    coordinates = models.CharField(max_length=255)
+    topology = models.TextField(blank=True)
+    flora_fauna = models.TextField(blank=True)
+    accesibility = models.TextField(blank=True)
+    site_boundaries = models.TextField(blank=True)
+    
+    utilities_availability = models.TextField(blank=True)
+    zoning_regulations = models.TextField(blank=True)
+    permits_approvals= models.TextField(blank=True)
+    safety_security= models.TextField(blank=True)
+    staging_storing = models.TextField(blank=True)
+    cultural_influences = models.TextField(blank=True)
+    local_contacts = models.TextField(blank=True)
     PHASE_CHOICES = [
         ('designing', 'Designing'),
         ('approvals', 'Approvals'),
@@ -161,8 +178,10 @@ class Todo(models.Model):
     isComplete = models.BooleanField(default=False)
     isDeleted = models.BooleanField(default=False)
     comments = models.ManyToManyField(Comment,blank=True,related_name="comments") 
-    spendings = models.DecimalField(max_digits=10, decimal_places=2,null=True, blank=True)
-    workers_pay = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    budget = models.DecimalField(max_digits=10, decimal_places=2,null=True, blank=True)
+    companyearnings = models.DecimalField(max_digits=10, decimal_places=2,null=True, blank=True)
+    facilitation = models.DecimalField(max_digits=10, decimal_places=2,null=True, blank=True)
+    labour = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     notes= models.TextField(null=True, blank=True)
     # documents = 
     def __str__(self):
