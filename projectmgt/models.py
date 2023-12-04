@@ -15,7 +15,6 @@ class Project(models.Model):
     flora_fauna = models.TextField(blank=True)
     accesibility = models.TextField(blank=True)
     site_boundaries = models.TextField(blank=True)
-    
     utilities_availability = models.TextField(blank=True)
     zoning_regulations = models.TextField(blank=True)
     permits_approvals= models.TextField(blank=True)
@@ -34,7 +33,7 @@ class Project(models.Model):
     ]
     current_phase = models.CharField(max_length=255, choices=PHASE_CHOICES, default='designing')
     name = models.CharField(max_length=255)
-    description = models.TextField()
+    description = models.TextField(blank=True)
     location = models.CharField(max_length=255)
     start_date = models.DateField(blank=True, null=True, auto_now_add=True) 
     end_date = models.DateField(blank=True, null=True)
@@ -183,6 +182,7 @@ class Todo(models.Model):
     facilitation = models.DecimalField(max_digits=10, decimal_places=2,null=True, blank=True)
     labour = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     notes= models.TextField(null=True, blank=True)
+    spendings = models.DecimalField(max_digits=10,decimal_places=2, null=True, blank=True)
     # documents = 
     def __str__(self):
         return self.title

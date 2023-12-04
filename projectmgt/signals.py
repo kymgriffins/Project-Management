@@ -5,7 +5,7 @@ from authentication.models import User
 from django.core.mail import send_mail
 from django.utils.html import strip_tags
 import decimal
-
+from authentication.models import *
 
 @receiver(m2m_changed, sender=Invoice.invoices.through)
 def update_invoice_total_amount(sender, instance, action, **kwargs):
@@ -32,9 +32,10 @@ def notify_user_on_project_creation(sender, instance, created, **kwargs):
             username = instance.client_name
             email = instance.client_email
             password = f"{instance.client_name.lower().replace(' ', '')}123"
+            roles = Role.objects.get_or_create(name='client')
 
             # Create a User instance
-            user = User.objects.create_user(username=username, email=email, password=password)
+            user = User.objects.create_user(username=username, email=email, password=password, roles=roles)
             print(f"User account created for {username}")
 
             # Send account details to the client via email
@@ -195,4 +196,61 @@ def send_project_details(sender, instance, created, **kwargs):
             html_message=html_message,  # Include the HTML content
             fail_silently=False,
         )
+# @receiver(post_save, sender=Invoice)
+# def send_invoice_email(sender, instance, created, **kwargs):
+#     if created:
+#         # Calculate the total amount of invoice items
+#         total_amount = sum(item.amount * item.quantity for item in instance.invoices.all())
 
+#         # Compose the email message
+#         subject = 'New Invoice Created'
+#         html_message = f"""
+#             <html>
+#                 <head>
+#                     <style>
+#                         /* Define CSS styles for the email */
+#                         /* ... (styles remain the same) ... */
+#                     </style>
+#                 </head>
+#                 <body>
+#                     <div class="container">
+#                         <h2>Hello {instance.name}!</h2>
+#                         <p>A new invoice has been created for your project.</p>
+#                         <p>Invoice Items:</p>
+#                         <ul>
+#                             <!-- Loop through and list invoice items -->
+#                             {% for item in instance.invoices.all %}
+#                                 <li>{item.quantity} x {item.content} - ${item.amount * item.quantity}</li>
+#                             {% endfor %}
+#                         </ul>
+#                         <p><strong>Total Amount:</strong> ${total_amount}</p>
+#                         <!-- Add more details as needed -->
+#                         <p>Thank you!</p>
+#                     </div>
+#                 </body>
+#             </html>
+#         """
+#         from_email = 'from@example.com'
+#         recipient_list = [instance.email]  # Assuming email is related to the user instance
+
+#         # Send the HTML email
+#         send_mail(
+#             subject,
+#             strip_tags(html_message),  # Remove HTML tags for plain text fallback
+#             from_email,
+#             recipient_list,
+#             html_message=html_message,  # Include the HTML content
+#             fail_silently=False,
+#         )
+
+@receiver(post_save, sender=Todo)
+def update_spendings(sender, instance, created, **kwargs):
+    if created or any(
+        field in kwargs['update_fields'] 
+        for field in ['company_earnings', 'labour', 'facilitation']
+    ):
+        # Assuming 'company_earnings', 'labour', 'facilitation' are DecimalField in Task model
+        # Calculate spendings based on these fields
+        spendings = instance.company_earnings + instance.labour + instance.facilitation
+        instance.spendings = spendings
+        instance.save(update_fields=['spendings'])
